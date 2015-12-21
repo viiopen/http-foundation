@@ -127,35 +127,37 @@ class NativeSessionStorage implements SessionStorageInterface
      */
     public function start()
     {
-        if ($this->started) {
-            return true;
-        }
+        throw new \Exception('Native session driver not supported.');
 
-        if (PHP_VERSION_ID >= 50400 && \PHP_SESSION_ACTIVE === session_status()) {
-            throw new \RuntimeException('Failed to start the session: already started by PHP.');
-        }
+        // if ($this->started) {
+        //     return true;
+        // }
 
-        if (PHP_VERSION_ID < 50400 && !$this->closed && isset($_SESSION) && session_id()) {
-            // not 100% fool-proof, but is the most reliable way to determine if a session is active in PHP 5.3
-            throw new \RuntimeException('Failed to start the session: already started by PHP ($_SESSION is set).');
-        }
+        // if (PHP_VERSION_ID >= 50400 && \PHP_SESSION_ACTIVE === session_status()) {
+        //     throw new \RuntimeException('Failed to start the session: already started by PHP.');
+        // }
 
-        if (ini_get('session.use_cookies') && headers_sent($file, $line)) {
-            throw new \RuntimeException(sprintf('Failed to start the session because headers have already been sent by "%s" at line %d.', $file, $line));
-        }
+        // if (PHP_VERSION_ID < 50400 && !$this->closed && isset($_SESSION) && session_id()) {
+        //     // not 100% fool-proof, but is the most reliable way to determine if a session is active in PHP 5.3
+        //     throw new \RuntimeException('Failed to start the session: already started by PHP ($_SESSION is set).');
+        // }
 
-        // ok to try and start the session
-        if (!session_start()) {
-            throw new \RuntimeException('Failed to start the session');
-        }
+        // if (ini_get('session.use_cookies') && headers_sent($file, $line)) {
+        //     throw new \RuntimeException(sprintf('Failed to start the session because headers have already been sent by "%s" at line %d.', $file, $line));
+        // }
 
-        $this->loadSession();
-        if (!$this->saveHandler->isWrapper() && !$this->saveHandler->isSessionHandlerInterface()) {
-            // This condition matches only PHP 5.3 with internal save handlers
-            $this->saveHandler->setActive(true);
-        }
+        // // ok to try and start the session
+        // if (!session_start()) {
+        //     throw new \RuntimeException('Failed to start the session');
+        // }
 
-        return true;
+        // $this->loadSession();
+        // if (!$this->saveHandler->isWrapper() && !$this->saveHandler->isSessionHandlerInterface()) {
+        //     // This condition matches only PHP 5.3 with internal save handlers
+        //     $this->saveHandler->setActive(true);
+        // }
+
+        // return true;
     }
 
     /**
